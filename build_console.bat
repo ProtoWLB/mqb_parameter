@@ -1,0 +1,1 @@
+pyinstaller --onefile kse_script.py

@@ -1,0 +1,1 @@
+pyinstaller --onefile --noconsole kse_script.py
