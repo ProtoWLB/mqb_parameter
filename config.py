@@ -8,8 +8,8 @@ class frame_config:
     csv_file = 'KSE_Silent_Algo_Control_Panel_v1.csv'
 
     # set signals numbers here
-    set_range = (277, 326)  # range - first and last (including last)
-    read_range = (328, 377)  # range - first and last (including last)
+    set_range = (277, 356)  # range - first and last (including last)
+    read_range = (358, 438)  # range - first and last (including last)
     request_len = 276
 
     # do not set signals numbers here

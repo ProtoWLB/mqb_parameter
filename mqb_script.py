@@ -1,6 +1,6 @@
 from BabyLIN.BLDriver import BL
 from frame import SetFrame, ReadFrame
-
+import pyperclip
 from signals_handler import signalsHandler
 from config import frame_config, lin
 import time
@@ -54,15 +54,20 @@ for signal in frame_config.read_signals:
     response.append(BabyLin.readSignal(signal))
     time.sleep(0.01)
 
+# if read skip first 3 bytes
+if not action.lower() == 's':
+    response = response[3:]
 
 hex_response = ''.join([hex(x)[2:].zfill(2) for x in response])
 print(hex_response)  # dec to hex
 
 
-
 with open("last_resp.txt", 'w', encoding='utf-8') as f:
     f.write('\n'+str(hex_response))
 
+# if read copy answer to clipboard
+if not action.lower() == 's':
+    pyperclip.copy(hex_response)
 # close BabyLin
 BabyLin.closeAll()
 
