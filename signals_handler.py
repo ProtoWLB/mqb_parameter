@@ -1,21 +1,20 @@
-from config import ramps
+from config import frame_config
 
 class signalsHandler():
-    def __init__(self, BabyLin, ramps_values):
+    def __init__(self, BabyLin, frame):
         self.BabyLin = BabyLin
-        self.ramps_values = ramps_values
+        self.frame = frame
 
     def assign_signals(self):
         """
-        set signals for hold and  open and close ramps
+        set frmaes signals
         :return:
         """
-        self.BabyLin.setsig(ramps.hold_signals[0], self.ramps_values.hold[0])  # one signal
-        self.set_ramp_signals(ramps.opening_signals, self.ramps_values.opening)
-        self.set_ramp_signals(ramps.closing_signals, self.ramps_values.closing)
+        self.BabyLin.setsig(frame_config.request_len, self.frame.payload_len)
+        self.set_multiple_signals(frame_config.set_signals, self.frame.data)
 
 
-    def set_ramp_signals(self, signals, ramp):
+    def set_multiple_signals(self, signals, ramp):
         """
         set signals for given values
         :param signals: signals numbers
@@ -24,4 +23,4 @@ class signalsHandler():
         """
         for sig, value in zip(signals, ramp):
             self.BabyLin.setsig(sig, value)
-            # todo check if should be delay between or some verification
+

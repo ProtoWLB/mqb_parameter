@@ -1,19 +1,24 @@
-class ramps:
+
+class frames_config:
+    read_sid = 0x22
+    read_len = 0x03
+
+
+class frame_config:
     csv_file = 'KSE_Silent_Algo_Control_Panel_v1.csv'
 
     # set signals numbers here
-    open_sigs = (135, 184)  # range - first and last (including last)
-    close_sigs = (185, 234)  # range - first and last (including last)
-    hold_signals = [134]
-    response_signals = [235, 236, 237]
-    correct_response = [110, 0, 12]  # signal values in decimal
+    set_range = (277, 326)  # range - first and last (including last)
+    read_range = (328, 377)  # range - first and last (including last)
+    request_len = 276
 
     # do not set signals numbers here
-    opening_signals = [i for i in range(open_sigs[0], open_sigs[1]+1)]
-    closing_signals = [i for i in range(close_sigs[0], close_sigs[1]+1)]
+    set_signals = [i for i in range(set_range[0], set_range[1]+1)]
+    read_signals = [i for i in range(read_range[0], read_range[1]+1)]
 
 class lin:
-    sdf = '.\BabyLin\kse_param.sdf'
+    sdf = '.\BabyLin\mqb_parameter.sdf'
     schedule_num = 2  # diagnostic session
-    ramps_macro = 0  # macro sending ramps definition with diagnostics
+    parameter_macro = 0  # macro sending ramps definition with diagnostics
+    extended_session_macro = 1
     max_macro_repeats = 5

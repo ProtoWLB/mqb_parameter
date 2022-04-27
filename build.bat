@@ -1,1 +1,1 @@
-pyinstaller --onefile --noconsole kse_script.py
+pyinstaller --onefile --noconsole mqb_script.py
