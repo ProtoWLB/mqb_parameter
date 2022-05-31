@@ -22,3 +22,31 @@ class lin:
     parameter_macro = 0  # macro sending ramps definition with diagnostics
     extended_session_macro = 1
     max_macro_repeats = 5
+
+
+class vw_lin_signals:
+    massage_intens = 66
+    massage_prog = 68
+    massage_status = 72
+    massage_read_status = 181
+
+
+
+# set frames
+filepath = 'stringi_silentalgo.txt'
+file = open(filepath, 'r')
+all_sets = file.readlines()
+file.close()
+for index, line in enumerate(all_sets):
+   all_sets[index] = line[:-1]  # append line without \n sign
+
+# read frames
+filepath = 'READ_silentalgo.txt'
+file = open(filepath, 'r')
+all_reads = file.readlines()
+file.close()
+for index, line in enumerate(all_reads):
+   all_reads[index] = line[:-1]  # append line without \n sign
+#
+# print(all_reads)
+
