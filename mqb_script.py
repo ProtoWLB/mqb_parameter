@@ -49,13 +49,18 @@ def setup_parametrization():
 
 def run_massage():
     BabyLin.startSchedule(0)
-    time.sleep(1)
+    time.sleep(0.1)
 
     # global setup
     BabyLin.setsig(63,2)  # ustawia domyślnie czas trwania na 10 minut
     BabyLin.setsig(252, 1)  # ustawia bit zapłonu na 1
-
+    BabyLin.setsig(77, 1)
     time.sleep(0.1)
+    BabyLin.setsig(62, 1)
+    time.sleep(1)
+    BabyLin.setsig(62, 0)
+    time.sleep(0.5)
+
     # massage setup
     BabyLin.setsig(vw_lin_signals.massage_prog, 5)
     BabyLin.setsig(vw_lin_signals.massage_intens, 3)
@@ -81,28 +86,32 @@ BabyLin.macro_exec(lin.extended_session_macro)  # exetended session frame - peri
 # dissignal read signals
 for signal in frame_config.read_signals:
     BabyLin.dissignal(signal, 1)
-    time.sleep(0.0)
+    # time.sleep(0.0)
 
 
 for one_set, one_read in zip(all_sets, all_reads):
 
     set_response = send_parameter_frame('s', one_set)
-    # ToDo if response ok than do rest
-
     time.sleep(0.5)
     num_of_bytes = int(len(one_read)/2)  # get number of bytes in response
+    # analyze response
     read_response = send_parameter_frame ('r', '0119')[:num_of_bytes]
     read_response = [hex(int(x)) for x in read_response]
     read_response = [x[2:].zfill(2) for x in read_response]
     read_response = ''.join(read_response)
+    # check if ok
     parametr_succced = read_response.lower() == one_read.lower()
     print('Parametrisation for request: {} {}'.format(one_read, 'succedded' if parametr_succced else 'failed'))
+    if not parametr_succced:
+        break
+    # run massage
     time.sleep(1)
     run_massage()
     time.sleep(0.1)
+    # run diagnostic
     setup_parametrization()
     time.sleep(0.1)
-    # todo if parameter_succced run massage
+
     # todo ??if not run parametrization again
 
 
@@ -110,3 +119,5 @@ for one_set, one_read in zip(all_sets, all_reads):
 
 # close BabyLin
 BabyLin.closeAll()
+
+input('Press enter to close')
