@@ -1,3 +1,5 @@
+from ramps import frame_data, opening, closing
+
 
 class frames_config:
     read_sid = 0x22
@@ -8,8 +10,8 @@ class frame_config:
     csv_file = 'KSE_Silent_Algo_Control_Panel_v1.csv'
 
     # set signals numbers here
-    set_range = (277, 356)  # range - first and last (including last)
-    read_range = (358, 438)  # range - first and last (including last)
+    set_range = (277, 381)  # range - first and last (including last)
+    read_range = (383, 463)  # range - first and last (including last)
     request_len = 276
 
     # do not set signals numbers here
@@ -32,14 +34,18 @@ class vw_lin_signals:
 
 
 
-# set frames
-filepath = 'stringi_silentalgo.txt'
-file = open(filepath, 'r')
-all_sets = file.readlines()
-file.close()
-for index, line in enumerate(all_sets):
-   all_sets[index] = line[:-1]  # append line without \n sign
+# # set frames
+# filepath = 'stringi_silentalgo.txt'
+# file = open(filepath, 'r')
+# all_sets = file.readlines()
+# file.close()
+# for index, line in enumerate(all_sets):
+#    all_sets[index] = line[:-1]  # append line without \n sign
+#
 
+all_sets = [frame_data.frameData(x).get_opening_frame() for x in opening.ramps]
+
+print(all_sets)
 # read frames
 filepath = 'READ_silentalgo.txt'
 file = open(filepath, 'r')
@@ -47,6 +53,7 @@ all_reads = file.readlines()
 file.close()
 for index, line in enumerate(all_reads):
    all_reads[index] = line[:-1]  # append line without \n sign
+
 #
 # print(all_reads)
 

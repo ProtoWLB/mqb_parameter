@@ -99,6 +99,7 @@ for one_set, one_read in zip(all_sets, all_reads):
     read_response = [hex(int(x)) for x in read_response]
     read_response = [x[2:].zfill(2) for x in read_response]
     read_response = ''.join(read_response)
+    print(read_response)
     # check if ok
     parametr_succced = read_response.lower() == one_read.lower()
     print('Parametrisation for request: {} {}'.format(one_read, 'succedded' if parametr_succced else 'failed'))
