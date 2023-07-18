@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-# $Revision: 44192 $ !! do not change or remove this line !!
+# $Revision: 61905 $ !! do not change or remove this line !!
 # -*- coding: utf-8 -*-
 
 
@@ -8,7 +8,6 @@ from __future__ import unicode_literals
 import six
 from ctypes import *
 import os, platform, numbers, sys, inspect, ctypes
-
 
 
 def create_BabyLIN():
@@ -42,56 +41,55 @@ def create_BabyLIN():
             # man koennte auch 'dpkg --print-architecture' benutzen:
             # 32-bit: Ausgabe: armhf
             # 64-bit: arm64
-
-            if platform.uname()[0].lower().startswith("linux"):
-                if platform.uname()[4].lower().startswith("armv7"):
-                    # linux based system on raspberry pi
-                    if platform.architecture()[0] == '32bit':
-                        return os.path.join(d, 'BabyLIN library',
-                                                    'Linux_RaspberryPi',
-                                                        'BabyLIN-Lib-32')
-
-                elif platform.uname()[4].lower().startswith("aarch64"):
-                    if platform.architecture()[0] == '64bit':
-                        return os.path.join(d, 'BabyLIN library',
-                                                    'Linux_RaspberryPi',
-                                                        'BabyLIN-Lib-64')
-                else:
-                    # generic linux system
-                    if platform.architecture()[0] == '32bit':
-                        return os.path.join(d, 'BabyLIN library',
-                                                    'Linux_PC',
-                                                        'BabyLIN-Lib-32')
-                    elif platform.architecture()[0] == '64bit':
-                        return os.path.join(d, 'BabyLIN library',
-                                                    'Linux_PC',
-                                                        'BabyLIN-Lib-64')
-
-            elif platform.uname()[0].lower().startswith(("win", "microsoft")):
-
-                if platform.architecture()[0].lower().startswith('32bit'):
-                    return os.path.join(d, 'BabyLIN library',
-                                                'Windows_PC',
-                                                    'BabyLIN-DLL x86')
-
-                elif platform.architecture()[0].lower().startswith('64bit'):
-                    return os.path.join(d, 'BabyLIN library',
-                                                'Windows_PC',
-                                                    'BabyLIN-DLL x64')
+            # M.S. - simplified for exe
+            return '.\BabyLin'
+            # if platform.uname()[0].lower().startswith("linux"):
+            #     if platform.uname()[4].lower().startswith("armv7"):
+            #         # linux based system on raspberry pi
+            #         if platform.architecture()[0] == '32bit':
+            #             return os.path.join(d, 'BabyLIN library',
+            #                                         'Linux_RaspberryPi',
+            #                                             'BabyLIN-Lib-32')
+            # 
+            #     elif platform.uname()[4].lower().startswith("aarch64"):
+            #         if platform.architecture()[0] == '64bit':
+            #             return os.path.join(d, 'BabyLIN library',
+            #                                         'Linux_RaspberryPi',
+            #                                             'BabyLIN-Lib-64')
+            #     else:
+            #         # generic linux system
+            #         if platform.architecture()[0] == '32bit':
+            #             return os.path.join(d, 'BabyLIN library',
+            #                                         'Linux_PC',
+            #                                             'BabyLIN-Lib-32')
+            #         elif platform.architecture()[0] == '64bit':
+            #             return os.path.join(d, 'BabyLIN library',
+            #                                         'Linux_PC',
+            #                                             'BabyLIN-Lib-64')
+            # 
+            # elif platform.uname()[0].lower().startswith(("win", "microsoft")):
+            # 
+            #     if platform.architecture()[0].lower().startswith('32bit'):
+            #         print(os.path.join(d, 'BabyLIN library',
+            #                                     'Windows_PC',
+            #                                         'BabyLIN-DLL x86'))
+            #         return os.path.join(d, 'BabyLIN library',
+            #                                     'Windows_PC',
+            #                                         'BabyLIN-DLL x86')
+            # 
+            #     elif platform.architecture()[0].lower().startswith('64bit'):
+            #         return os.path.join(d, 'BabyLIN library',
+            #                                     'Windows_PC',
+            #                                         'BabyLIN-DLL x64')
 
         BABYLIN_DLL_DIRECTORY           = property(lambda self:
                                             self._getSharedObjectDirectory())
-
-        # M.S. - modified for exe to work
-        BABYLIN_DLL_PATH_NAME           =  '.\BabyLin\BabyLIN.dll'
-
-
-        # BABYLIN_DLL_PATH_NAME           = property(lambda self:
-        #     os.path.join(
-        #         self._getSharedObjectDirectory(),
-        #             'libBabyLIN.so' \
-        #                 if platform.uname()[0].lower().startswith("linux") \
-        #                     else 'BabyLIN.dll'))
+        BABYLIN_DLL_PATH_NAME           = property(lambda self:
+            os.path.join(
+                self._getSharedObjectDirectory(),
+                    'libBabyLIN.so' \
+                        if platform.uname()[0].lower().startswith("linux") \
+                            else 'BabyLIN.dll'))
 
         BL_OK                               = property(lambda self:        0)
         BL_PC_SIDE_ERRORS                   = property(lambda self:  -100000)
@@ -161,7 +159,7 @@ def create_BabyLIN():
             return ""
 
         BABYLIN_DLL_MAJOR             = property(lambda self:           2)
-        BABYLIN_DLL_MINOR             = property(lambda self:           2)
+        BABYLIN_DLL_MINOR             = property(lambda self:           5)
         BABYLIN_DLL_BUILD             = property(lambda self:           0)
         BABYLIN_DLL_REV               = property(lambda self: self._rev())
 
@@ -184,7 +182,7 @@ def create_BabyLIN():
         PYTHON_CHECK_FAILURE            = property(lambda self:     -6)
 
         # some commands sent via BLC_sendCommand return a proper value, which
-        # should not be interpretetd as error code, but as result value
+        # should not be interpreted as error code, but as result value
         COMMANDS_RETURNING_VALUES       = property(lambda self:
                                             ['hwtype',\
                                              'status',\
@@ -192,6 +190,7 @@ def create_BabyLIN():
                                              'version',\
                                              'persistent_rd',\
                                              'hwstate',\
+                                             'macro_result',\
                                              'getnodesimu'])
 
         @classmethod
@@ -222,147 +221,155 @@ def create_BabyLIN():
                         libNames[name] = name
                 elif platform.architecture()[0].lower().startswith('32bit'):
                     libNames = {
-                        'BLC_Reset'                                : 'BLC_Reset@4',
-                        'BLC_SDF_getFrameNr'                       : 'BLC_SDF_getFrameNr@8',
-                        'BLC_SDF_getMacroNr'                       : 'BLC_SDF_getMacroNr@8',
-                        'BLC_SDF_getNodeNr'                        : 'BLC_SDF_getNodeNr@8',
-                        'BLC_SDF_getNumSchedules'                  : 'BLC_SDF_getNumSchedules@4',
-                        'BLC_SDF_getScheduleName'                  : 'BLC_SDF_getScheduleName@8',
-                        'BLC_SDF_getScheduleNr'                    : 'BLC_SDF_getScheduleNr@8',
-                        'BLC_SDF_getSignalNr'                      : 'BLC_SDF_getSignalNr@8',
-                        'BLC_close'                                : 'BLC_close@4',
-                        'BLC_closeAll'                             : 'BLC_closeAll@0',
-                        'BLC_convertUrl'                           : 'BLC_convertUrl@8',
-                        'BLC_dmDelay'                              : 'BLC_dmDelay@8',
-                        'BLC_dmPrepare'                            : 'BLC_dmPrepare@8',
-                        'BLC_dmPulse'                              : 'BLC_dmPulse@12',
-                        'BLC_dmRead'                               : 'BLC_dmRead@12',
-                        'BLC_dmReadTimeout'                        : 'BLC_dmReadTimeout@16',
-                        'BLC_dmReportConfig'                       : 'BLC_dmReportConfig@12',
-                        'BLC_dmStart'                              : 'BLC_dmStart@20',
-                        'BLC_dmStop'                               : 'BLC_dmStop@4',
-                        'BLC_dmWrite'                              : 'BLC_dmWrite@12',
-                        'BLC_downloadSDF'                          : 'BLC_downloadSDF@8',
-                        'BLC_encodeSignal'                         : 'BLC_encodeSignal@32',
-                        'BLC_flush'                                : 'BLC_flush@4',
-                        'BLC_getAnswerByIndex'                     : 'BLC_getAnswerByIndex@16',
-                        'BLC_getAnswerByName'                      : 'BLC_getAnswerByName@16',
-                        'BLC_getAnswerNameByIndex'                 : 'BLC_getAnswerNameByIndex@16',
-                        'BLC_getAnswerTypeByIndex'                 : 'BLC_getAnswerTypeByIndex@16',
-                        'BLC_getAnswerTypeByName'                  : 'BLC_getAnswerTypeByName@16',
-                        'BLC_getBabyLinPorts'                      : 'BLC_getBabyLinPorts@8',
-                        'BLC_getBabyLinPortsTimout'                : 'BLC_getBabyLinPortsTimout@12',
-                        'BLC_getChannelCount'                      : 'BLC_getChannelCount@4',
-                        'BLC_getChannelHandle'                     : 'BLC_getChannelHandle@8',
-                        'BLC_getChannelInfo'                       : 'BLC_getChannelInfo@8',
-                        'BLC_getChannelSectionDescription'         : 'BLC_getChannelSectionDescription@4',
-                        'BLC_getDTLRequestStatus'                  : 'BLC_getDTLRequestStatus@4',
-                        'BLC_getDTLResponseStatus'                 : 'BLC_getDTLResponseStatus@4',
-                        'BLC_getErrorString'                       : 'BLC_getErrorString@4',
-                        'BLC_getExtendedVersion'                   : 'BLC_getExtendedVersion@16',
-                        'BLC_getFrameCount'                        : 'BLC_getFrameCount@4',
-                        'BLC_getFrameDetails'                      : 'BLC_getFrameDetails@24',
-                        'BLC_getFrameIdForFrameNr'                 : 'BLC_getFrameIdForFrameNr@8',
-                        'BLC_getFrameName'                         : 'BLC_getFrameName@16',
-                        'BLC_getFrameNrForFrameId'                 : 'BLC_getFrameNrForFrameId@8',
-                        'BLC_getHWType'                            : 'BLC_getHWType@4',
-                        'BLC_getLastError'                         : 'BLC_getLastError@12',
-                        'BLC_getLastFrame'                         : 'BLC_getLastFrame@12',
-                        'BLC_getNextBusError'                      : 'BLC_getNextBusError@8',
-                        'BLC_getNextDTLRequest'                    : 'BLC_getNextDTLRequest@8',
-                        'BLC_getNextDTLResponse'                   : 'BLC_getNextDTLResponse@8',
-                        'BLC_getNextFrame'                         : 'BLC_getNextFrame@8',
-                        'BLC_getNextFrameTimeout'                  : 'BLC_getNextFrameTimeout@12',
-                        'BLC_getNextFrames'                        : 'BLC_getNextFrames@12',
-                        'BLC_getNextFramesTimeout'                 : 'BLC_getNextFramesTimeout@16',
-                        'BLC_getNextSignal'                        : 'BLC_getNextSignal@8',
-                        'BLC_getNextSignals'                       : 'BLC_getNextSignals@12',
-                        'BLC_getNextSignalsForNumber'              : 'BLC_getNextSignalsForNumber@16',
-                        'BLC_getNodeCount'                         : 'BLC_getNodeCount@4',
-                        'BLC_getNodeForSignal'                     : 'BLC_getNodeForSignal@8',
-                        'BLC_getNodeName'                          : 'BLC_getNodeName@16',
-                        'BLC_getRawSlaveResponse'                  : 'BLC_getRawSlaveResponse@12',
-                        'BLC_getSDFInfo'                           : 'BLC_getSDFInfo@8',
-                        'BLC_getSectionInfo'                       : 'BLC_getSectionInfo@12',
-                        'BLC_getSignalArray'                       : 'BLC_getSignalArray@12',
-                        'BLC_getSignalArrayByName'                 : 'BLC_getSignalArrayByName@12',
-                        'BLC_getSignalArrayWithTimestamp'          : 'BLC_getSignalArrayWithTimestamp@16',
-                        'BLC_getSignalCount'                       : 'BLC_getSignalCount@4',
-                        'BLC_getSignalInFrame'                     : 'BLC_getSignalInFrame@12',
-                        'BLC_getSignalName'                        : 'BLC_getSignalName@16',
-                        'BLC_getSignalSize'                        : 'BLC_getSignalSize@8',
-                        'BLC_getSignalValue'                       : 'BLC_getSignalValue@12',
-                        'BLC_getSignalValueByName'                 : 'BLC_getSignalValueByName@12',
-                        'BLC_getSignalValueWithTimestamp'          : 'BLC_getSignalValueWithTimestamp@16',
-                        'BLC_getSignalsInFrame'                    : 'BLC_getSignalsInFrame@16',
-                        'BLC_getSignalsInFrameCount'               : 'BLC_getSignalsInFrameCount@8',
-                        'BLC_getTargetID'                          : 'BLC_getTargetID@8',
-                        'BLC_getVersion'                           : 'BLC_getVersion@8',
-                        'BLC_getVersionString'                     : 'BLC_getVersionString@0',
+                        'BLC_Reset'                                : 'BLC_Reset',
+                        'BLC_SDF_getFrameNr'                       : 'BLC_SDF_getFrameNr',
+                        'BLC_SDF_getMacroNr'                       : 'BLC_SDF_getMacroNr',
+                        'BLC_SDF_getNodeNr'                        : 'BLC_SDF_getNodeNr',
+                        'BLC_SDF_getNumSchedules'                  : 'BLC_SDF_getNumSchedules',
+                        'BLC_SDF_getScheduleName'                  : 'BLC_SDF_getScheduleName',
+                        'BLC_SDF_getScheduleNr'                    : 'BLC_SDF_getScheduleNr',
+                        'BLC_SDF_getSignalNr'                      : 'BLC_SDF_getSignalNr',
+                        'BLC_close'                                : 'BLC_close',
+                        'BLC_closeAll'                             : 'BLC_closeAll',
+                        'BLC_convertUrl'                           : 'BLC_convertUrl',
+                        'BLC_dmDelay'                              : 'BLC_dmDelay',
+                        'BLC_dmPrepare'                            : 'BLC_dmPrepare',
+                        'BLC_dmPulse'                              : 'BLC_dmPulse',
+                        'BLC_dmRead'                               : 'BLC_dmRead',
+                        'BLC_dmReadTimeout'                        : 'BLC_dmReadTimeout',
+                        'BLC_dmReportConfig'                       : 'BLC_dmReportConfig',
+                        'BLC_dmStart'                              : 'BLC_dmStart',
+                        'BLC_dmStop'                               : 'BLC_dmStop',
+                        'BLC_dmWrite'                              : 'BLC_dmWrite',
+                        'BLC_downloadSDF'                          : 'BLC_downloadSDF',
+                        'BLC_encodeSignal'                         : 'BLC_encodeSignal',
+                        'BLC_flush'                                : 'BLC_flush',
+                        'BLC_getAnswerByIndex'                     : 'BLC_getAnswerByIndex',
+                        'BLC_getAnswerByName'                      : 'BLC_getAnswerByName',
+                        'BLC_getAnswerNameByIndex'                 : 'BLC_getAnswerNameByIndex',
+                        'BLC_getAnswerTypeByIndex'                 : 'BLC_getAnswerTypeByIndex',
+                        'BLC_getAnswerTypeByName'                  : 'BLC_getAnswerTypeByName',
+                        'BLC_getBabyLinPorts'                      : 'BLC_getBabyLinPorts',
+                        'BLC_getBabyLinPortsTimout'                : 'BLC_getBabyLinPortsTimout',
+                        'BLC_getChannelCount'                      : 'BLC_getChannelCount',
+                        'BLC_getChannelHandle'                     : 'BLC_getChannelHandle',
+                        'BLC_getChannelInfo'                       : 'BLC_getChannelInfo',
+                        'BLC_getChannelSectionDescription'         : 'BLC_getChannelSectionDescription',
+                        'BLC_getDTLRequestStatus'                  : 'BLC_getDTLRequestStatus',
+                        'BLC_getDTLResponseStatus'                 : 'BLC_getDTLResponseStatus',
+                        'BLC_getErrorString'                       : 'BLC_getErrorString',
+                        'BLC_getExtendedVersion'                   : 'BLC_getExtendedVersion',
+                        'BLC_getFrameCount'                        : 'BLC_getFrameCount',
+                        'BLC_getFrameDetails'                      : 'BLC_getFrameDetails',
+                        'BLC_getFrameIdForFrameNr'                 : 'BLC_getFrameIdForFrameNr',
+                        'BLC_getFrameName'                         : 'BLC_getFrameName',
+                        'BLC_getFrameNrForFrameId'                 : 'BLC_getFrameNrForFrameId',
+                        'BLC_getHWType'                            : 'BLC_getHWType',
+                        'BLC_getLastError'                         : 'BLC_getLastError',
+                        'BLC_getDetailedErrorString'               : 'BLC_getDetailedErrorString',
+                        'BLC_getLastFrame'                         : 'BLC_getLastFrame',
+                        'BLC_getNextBusError'                      : 'BLC_getNextBusError',
+                        'BLC_getNextDTLRequest'                    : 'BLC_getNextDTLRequest',
+                        'BLC_getNextDTLResponse'                   : 'BLC_getNextDTLResponse',
+                        'BLC_getNextFrame'                         : 'BLC_getNextFrame',
+                        'BLC_getNextJumboFrame'                    : 'BLC_getNextJumboFrame',
+                        'BLC_getNextFrameTimeout'                  : 'BLC_getNextFrameTimeout',
+                        'BLC_getNextJumboFrameTimeout'             : 'BLC_getNextJumboFrameTimeout',
+                        'BLC_getNextFrames'                        : 'BLC_getNextFrames',
+                        'BLC_getNextJumboFrames'                   : 'BLC_getNextJumboFrames',
+                        'BLC_getNextFramesTimeout'                 : 'BLC_getNextFramesTimeout',
+                        'BLC_getNextJumboFramesTimeout'            : 'BLC_getNextJumboFramesTimeout',
+                        'BLC_getNextSignal'                        : 'BLC_getNextSignal',
+                        'BLC_getNextSignals'                       : 'BLC_getNextSignals',
+                        'BLC_getNextSignalsForNumber'              : 'BLC_getNextSignalsForNumber',
+                        'BLC_getNodeCount'                         : 'BLC_getNodeCount',
+                        'BLC_getNodeForSignal'                     : 'BLC_getNodeForSignal',
+                        'BLC_getNodeName'                          : 'BLC_getNodeName',
+                        'BLC_getMacroResultString'                 : 'BLC_getMacroResultString',
+                        'BLC_varRead'                              : 'BLC_varRead',
+                        'BLC_varWrite'                             : 'BLC_varWrite',
+                        'BLC_getRawSlaveResponse'                  : 'BLC_getRawSlaveResponse',
+                        'BLC_getSDFInfo'                           : 'BLC_getSDFInfo',
+                        'BLC_getSectionInfo'                       : 'BLC_getSectionInfo',
+                        'BLC_getSignalArray'                       : 'BLC_getSignalArray',
+                        'BLC_getSignalArrayByName'                 : 'BLC_getSignalArrayByName',
+                        'BLC_getSignalArrayWithTimestamp'          : 'BLC_getSignalArrayWithTimestamp',
+                        'BLC_getSignalCount'                       : 'BLC_getSignalCount',
+                        'BLC_getSignalInFrame'                     : 'BLC_getSignalInFrame',
+                        'BLC_getSignalName'                        : 'BLC_getSignalName',
+                        'BLC_getSignalSize'                        : 'BLC_getSignalSize',
+                        'BLC_getSignalValue'                       : 'BLC_getSignalValue',
+                        'BLC_getSignalValueByName'                 : 'BLC_getSignalValueByName',
+                        'BLC_getSignalValueWithTimestamp'          : 'BLC_getSignalValueWithTimestamp',
+                        'BLC_getSignalsInFrame'                    : 'BLC_getSignalsInFrame',
+                        'BLC_getSignalsInFrameCount'               : 'BLC_getSignalsInFrameCount',
+                        'BLC_getTargetID'                          : 'BLC_getTargetID',
+                        'BLC_getVersion'                           : 'BLC_getVersion',
+                        'BLC_getVersionString'                     : 'BLC_getVersionString',
                         'BLC_getWrapperVersion'                    : 'BLC_getWrapperVersion',
-                        'BLC_isSignalArray'                        : 'BLC_isSignalArray@8',
-                        'BLC_isSignalEmulated'                     : 'BLC_isSignalEmulated@8',
-                        'BLC_lastAnswerHasData'                    : 'BLC_lastAnswerHasData@4',
-                        'BLC_loadLDF'                              : 'BLC_loadLDF@12',
-                        'BLC_loadSDF'                              : 'BLC_loadSDF@12',
-                        'BLC_macro_result'                         : 'BLC_macro_result@16',
-                        'BLC_mon_set'                              : 'BLC_mon_set@16',
-                        'BLC_mon_set_xmit'                         : 'BLC_mon_set_xmit@20',
-                        'BLC_mon_xmit'                             : 'BLC_mon_xmit@12',
-                        'BLC_open'                                 : 'BLC_open@4',
-                        'BLC_openNet'                              : 'BLC_openNet@8',
-                        'BLC_openPort'                             : 'BLC_openPort@520',
-                        'BLC_openUSB'                              : 'BLC_openUSB@4',
-                        'BLC_registerDTLRequestCallback'           : 'BLC_registerDTLRequestCallback@8',
-                        'BLC_registerDTLResponseCallback'          : 'BLC_registerDTLResponseCallback@8',
-                        'BLC_registerDebugCallback'                : 'BLC_registerDebugCallback@8',
-                        'BLC_registerErrorCallback'                : 'BLC_registerErrorCallback@8',
-                        'BLC_registerEventCallback'                : 'BLC_registerEventCallback@8',
-                        'BLC_registerFrameCallback'                : 'BLC_registerFrameCallback@8',
-                        'BLC_registerJumboFrameCallback'           : 'BLC_registerJumboFrameCallback@8',
-                        'BLC_registerMacroStateCallback'           : 'BLC_registerMacroStateCallback@8',
-                        'BLC_registerSignalCallback'               : 'BLC_registerSignalCallback@8',
-                        'BLC_registerUserDataDTLRequestCallback'   : 'BLC_registerUserDataDTLRequestCallback@12',
-                        'BLC_registerUserDataDTLResponseCallback'  : 'BLC_registerUserDataDTLResponseCallback@12',
-                        'BLC_registerUserDataDebugCallback'        : 'BLC_registerUserDataDebugCallback@12',
-                        'BLC_registerUserDataErrorCallback'        : 'BLC_registerUserDataErrorCallback@12',
-                        'BLC_registerUserDataEvent'                : 'BLC_registerUserDataEvent@12',
-                        'BLC_registerUserDataEventCallback'        : 'BLC_registerUserDataEventCallback@12',
-                        'BLC_registerUserDataFrameCallback'        : 'BLC_registerUserDataFrameCallback@12',
-                        'BLC_registerUserDataJumboFrameCallback'   : 'BLC_registerUserDataJumboFrameCallback@12',
-                        'BLC_registerUserDataMacroStateCallback'   : 'BLC_registerUserDataMacroStateCallback@12',
-                        'BLC_registerUserDataSignalCallback'       : 'BLC_registerUserDataSignalCallback@12',
-                        'BLC_sendCommand'                          : 'BLC_sendCommand@8',
-                        'BLC_decodeSignal'                         : 'BLC_decodeSignal@16',
-                        'BLC_sendDTLRequest'                       : 'BLC_sendDTLRequest@16',
-                        'BLC_sendDTLResponse'                      : 'BLC_sendDTLResponse@16',
-                        'BLC_sendRaw'                              : 'BLC_sendRaw@12',
-                        'BLC_sendRawMasterRequest'                 : 'BLC_sendRawMasterRequest@12',
-                        'BLC_sendRawSlaveResponse'                 : 'BLC_sendRawSlaveResponse@20',
-                        'BLC_setDTLMode'                           : 'BLC_setDTLMode@8',
-                        'BLC_setsig'                               : 'BLC_setsig@16',
-                        'BLC_updRawSlaveResponse'                  : 'BLC_updRawSlaveResponse@4',
-                        'SDF_close'                                : 'SDF_close@4',
-                        'SDF_downloadSectionToChannel'             : 'SDF_downloadSectionToChannel@8',
-                        'SDF_downloadToDevice'                     : 'SDF_downloadToDevice@12',
-                        'SDF_getSectionCount'                      : 'SDF_getSectionCount@4',
-                        'SDF_getSectionHandle'                     : 'SDF_getSectionHandle@8',
-                        'SDF_getSectionInfo'                       : 'SDF_getSectionInfo@8',
-                        'SDF_open'                                 : 'SDF_open@4',
-                        'SDF_openLDF'                              : 'SDF_openLDF@4',
-                        'BLC_createHandle'                         : 'BLC_createHandle@12',
-                        'BLC_destroy'                              : 'BLC_destroy@4',
-                        'BLC_releaseHandle'                        : 'BLC_releaseHandle@4',
-                        'BLC_discover'                             : 'BLC_discover@16',
-                        'BLC_getSignedNumber'                      : 'BLC_getSignedNumber@12',
-                        'BLC_getUnsignedNumber'                    : 'BLC_getUnsignedNumber@12',
-                        'BLC_getBinary'                            : 'BLC_getBinary@16',
-                        'BLC_setSignedNumber'                      : 'BLC_setSignedNumber@16',
-                        'BLC_setUnsignedNumber'                    : 'BLC_setUnsignedNumber@16',
-                        'BLC_setBinary'                            : 'BLC_setBinary@16',
-                        'BLC_execute'                              : 'BLC_execute@8',
-                        'BLC_execute_async'                        : 'BLC_execute_async@16',
-                        'BLC_setCallback'                          : 'BLC_setCallback@16'}
+                        'BLC_isSignalArray'                        : 'BLC_isSignalArray',
+                        'BLC_isSignalEmulated'                     : 'BLC_isSignalEmulated',
+                        'BLC_lastAnswerHasData'                    : 'BLC_lastAnswerHasData',
+                        'BLC_loadLDF'                              : 'BLC_loadLDF',
+                        'BLC_loadSDF'                              : 'BLC_loadSDF',
+                        'BLC_macro_result'                         : 'BLC_macro_result',
+                        'BLC_mon_set'                              : 'BLC_mon_set',
+                        'BLC_mon_set_xmit'                         : 'BLC_mon_set_xmit',
+                        'BLC_mon_xmit'                             : 'BLC_mon_xmit',
+                        'BLC_open'                                 : 'BLC_open',
+                        'BLC_openNet'                              : 'BLC_openNet',
+                        'BLC_openPort'                             : 'BLC_openPort',
+                        'BLC_openUSB'                              : 'BLC_openUSB',
+                        'BLC_registerDTLRequestCallback'           : 'BLC_registerDTLRequestCallback',
+                        'BLC_registerDTLResponseCallback'          : 'BLC_registerDTLResponseCallback',
+                        'BLC_registerDebugCallback'                : 'BLC_registerDebugCallback',
+                        'BLC_registerErrorCallback'                : 'BLC_registerErrorCallback',
+                        'BLC_registerEventCallback'                : 'BLC_registerEventCallback',
+                        'BLC_registerFrameCallback'                : 'BLC_registerFrameCallback',
+                        'BLC_registerJumboFrameCallback'           : 'BLC_registerJumboFrameCallback',
+                        'BLC_registerMacroStateCallback'           : 'BLC_registerMacroStateCallback',
+                        'BLC_registerSignalCallback'               : 'BLC_registerSignalCallback',
+                        'BLC_registerUserDataDTLRequestCallback'   : 'BLC_registerUserDataDTLRequestCallback',
+                        'BLC_registerUserDataDTLResponseCallback'  : 'BLC_registerUserDataDTLResponseCallback',
+                        'BLC_registerUserDataDebugCallback'        : 'BLC_registerUserDataDebugCallback',
+                        'BLC_registerUserDataErrorCallback'        : 'BLC_registerUserDataErrorCallback',
+                        'BLC_registerUserDataEvent'                : 'BLC_registerUserDataEvent',
+                        'BLC_registerUserDataEventCallback'        : 'BLC_registerUserDataEventCallback',
+                        'BLC_registerUserDataFrameCallback'        : 'BLC_registerUserDataFrameCallback',
+                        'BLC_registerUserDataJumboFrameCallback'   : 'BLC_registerUserDataJumboFrameCallback',
+                        'BLC_registerUserDataMacroStateCallback'   : 'BLC_registerUserDataMacroStateCallback',
+                        'BLC_registerUserDataSignalCallback'       : 'BLC_registerUserDataSignalCallback',
+                        'BLC_sendCommand'                          : 'BLC_sendCommand',
+                        'BLC_decodeSignal'                         : 'BLC_decodeSignal',
+                        'BLC_sendDTLRequest'                       : 'BLC_sendDTLRequest',
+                        'BLC_sendDTLResponse'                      : 'BLC_sendDTLResponse',
+                        'BLC_sendRaw'                              : 'BLC_sendRaw',
+                        'BLC_sendRawMasterRequest'                 : 'BLC_sendRawMasterRequest',
+                        'BLC_sendRawSlaveResponse'                 : 'BLC_sendRawSlaveResponse',
+                        'BLC_setDTLMode'                           : 'BLC_setDTLMode',
+                        'BLC_setsig'                               : 'BLC_setsig',
+                        'BLC_updRawSlaveResponse'                  : 'BLC_updRawSlaveResponse',
+                        'SDF_close'                                : 'SDF_close',
+                        'SDF_downloadSectionToChannel'             : 'SDF_downloadSectionToChannel',
+                        'SDF_downloadToDevice'                     : 'SDF_downloadToDevice',
+                        'SDF_getSectionCount'                      : 'SDF_getSectionCount',
+                        'SDF_getSectionHandle'                     : 'SDF_getSectionHandle',
+                        'SDF_getSectionInfo'                       : 'SDF_getSectionInfo',
+                        'SDF_open'                                 : 'SDF_open',
+                        'SDF_openLDF'                              : 'SDF_openLDF',
+                        'BLC_createHandle'                         : 'BLC_createHandle',
+                        'BLC_destroy'                              : 'BLC_destroy',
+                        'BLC_releaseHandle'                        : 'BLC_releaseHandle',
+                        'BLC_discover'                             : 'BLC_discover',
+                        'BLC_getSignedNumber'                      : 'BLC_getSignedNumber',
+                        'BLC_getUnsignedNumber'                    : 'BLC_getUnsignedNumber',
+                        'BLC_getBinary'                            : 'BLC_getBinary',
+                        'BLC_setSignedNumber'                      : 'BLC_setSignedNumber',
+                        'BLC_setUnsignedNumber'                    : 'BLC_setUnsignedNumber',
+                        'BLC_setBinary'                            : 'BLC_setBinary',
+                        'BLC_execute'                              : 'BLC_execute',
+                        'BLC_execute_async'                        : 'BLC_execute_async',
+                        'BLC_setCallback'                          : 'BLC_setCallback'}
 
             return libNames
 
@@ -397,15 +404,18 @@ def create_BabyLIN():
     @six.add_metaclass(_BabyLIN)
     class BabyLIN(object):
 
-        _frame_callback        = None
-        _signal_callback       = None
-        _macrostate_callback   = None
-        _jumboframe_callback   = None
-        _event_callback        = None
-        _error_callback        = None
-        _debug_callback        = None
-        _dtl_response_callback = None
-        _dtl_request_callback  = None
+        # when registering callbacks, keep a reference to them so that
+        # python does not remove them from memory, which would have bad
+        # effects inside the BabyLIN-dll.
+        _frame_callback        = dict()
+        _signal_callback       = dict()
+        _macro_state_callback  = dict()
+        _jumbo_frame_callback  = dict()
+        _event_callback        = dict()
+        _error_callback        = dict()
+        _debug_callback        = dict()
+        _dtl_response_callback = dict()
+        _dtl_request_callback  = dict()
 
         _frame_cb_user         = None
         _signal_cb_user        = None
@@ -565,13 +575,13 @@ def create_BabyLIN():
 
 
         # @six.python_2_unicode_compatible
-        class BLC_JUMBO_FRAME(Structure):
+        class BLC_JUMBO_FRAME(ctypes.Structure):
             _fields_ = [("chId",                    c_ulong),
                         ("timestamp",               c_ulong),
                         ("intime",                  c_long),
                         ("frameId",                 c_ulong),
-                        ("lenOfData",               c_ubyte),
-                        ("frameData",               c_ubyte * 8),
+                        ("lenOfData",               c_int),
+                        ("frameData",               c_ubyte * 1024),
                         ("frameFlags",              c_short),
                         ("busFlags",                c_short),
                         ("checksum",                c_ubyte)]
@@ -988,8 +998,8 @@ def create_BabyLIN():
             with BabyLIN.ForeignFunctionParameterTypes(
                 cls, c_int, [c_char_p, POINTER(cls.BLC_PORTINFO)]) as lib_func:
                     portInfo = cls.BLC_PORTINFO()
-                    rv = lib_func(c_char_p(url.encode('utf-8')),
-                                  byref(portInfo))
+                    url_ = BabyLIN._create_string_buffer(url)
+                    rv = lib_func(url_, byref(portInfo))
                     if rv != cls.BL_OK:
                         raise cls.BabyLINException(rv, "error conv. " + url)
                     return portInfo
@@ -1260,7 +1270,6 @@ def create_BabyLIN():
             if not os.path.exists(fname):
                 raise cls.BabyLINException(-1,
                         "sdf-file {} does not exist".format(fname))
-
             with BabyLIN.ForeignFunctionParameterTypes(
                 cls, c_int, [c_void_p, c_char_p, c_int]) as lib_func:
                     rv = lib_func(c_void_p(connectionHandle),
@@ -1305,7 +1314,6 @@ def create_BabyLIN():
                 cls, c_int, [c_void_p, c_char_p]) as lib_func:
                     if isinstance(cmd, six.binary_type):
                         cmd = cmd.decode('utf-8')
-
                     cmd_ = BabyLIN._create_string_buffer(cmd)
                     rv = lib_func(c_void_p(handle), cmd_)
 
@@ -1326,21 +1334,33 @@ def create_BabyLIN():
             with BabyLIN.ForeignFunctionParameterTypes(
                 cls, c_int, [c_void_p, cb_t], lev=2) \
                     as lib_func:
+                        # generate a unique key for the callback
+                        key = '%x%s' % (handle, name)
                         if not cb:
                             # NOTE: workaround for deregistering a callback
                             # we have to set argtypes to nothing, otherwise
                             # ctypes will throw an exception or even crash
                             lib_func.argtypes = [c_void_p, c_void_p]
-                            setattr(cls, name, None)
+                            attr = getattr(cls, name, None)
+                            if attr is not None and key in attr:
+                                # remove the callback from memory
+                                del attr[key]
                             return lib_func(c_void_p(handle), c_void_p(cb))
 
-                        setattr(cls, name, cb_t(cb))
-                        return lib_func(c_void_p(handle), getattr(cls, name))
-
+                        # 'attr' is a dictionary. it will store a reference
+                        # of the callback under the generated 'key' so that
+                        # python does not remove it from memory.
+                        attr = getattr(cls, name, None)
+                        if attr is not None:
+                            attr[key] = cb_t(cb)
+                            return lib_func(c_void_p(handle), attr[key])
 
         @classmethod
         def _registerCallbackUser(cls, handle, cb, cb_t, userdata, name):
             """ """
+            # TODO
+            return cls.BL_OK
+
             with BabyLIN.ForeignFunctionParameterTypes(
                 cls, c_int, [c_void_p, cb_t, c_void_p], lev=2) \
                     as lib_func:
@@ -1461,7 +1481,8 @@ def create_BabyLIN():
         def BLC_registerJumboFrameCallback(cls, handle, cb):
             """ """
             cb_t = CFUNCTYPE(c_int, c_void_p, BabyLIN.BLC_JUMBO_FRAME)
-            return cls._registerCallback(handle, cb, cb_t, '_jumbo_callback')
+            return cls._registerCallback(handle, cb, cb_t,
+                                         '_jumbo_frame_callback')
             if rv != cls.BL_OK:
                 raise cls.BabyLINException(rv, "")
             return rv
@@ -1538,7 +1559,22 @@ def create_BabyLIN():
 
         @classmethod
         def BLC_registerUserDataDebugCallback(cls, handle, cb, userdata):
-            """ """
+            """
+            Note that there is a problem with this function: for instance,
+            if we register the following callback:
+
+                def debug_callback(channel_handle, text, userdata):
+                    import ctypes
+                    c_int64_p = ctypes.POINTER(ctypes.c_int64)
+                    print('userdata=', userdata)
+                    print(ctypes.cast(eval(str(userdata)), c_int64_p).contents)
+                    return 0
+
+            then userdata contains the address of the real data, which is OK,
+            but then it seems that there is no way to dereference this
+            pointer. The method above does somehow not work: '.contents' does
+            not show the data, it shows the address again...
+            """
             cb_t = CFUNCTYPE(c_int, c_void_p, c_char_p, c_void_p)
             rv = cls._registerCallbackUser(handle, cb, cb_t,
                                            c_void_p(userdata),
@@ -1781,6 +1817,19 @@ def create_BabyLIN():
                             raise cls.BabyLINException(rv, "")
                         return frame
 
+        @classmethod
+        def BLC_getNextJumboFrame(cls, channelHandle):
+            """ """
+            with BabyLIN.ForeignFunctionParameterTypes(
+                cls, c_int, [c_void_p, POINTER(cls.BLC_JUMBO_FRAME)]) \
+                    as lib_func:
+                        jumbo_frame = cls.BLC_JUMBO_FRAME()
+                        rv = lib_func(c_void_p(channelHandle),
+                                      byref(jumbo_frame))
+                        if rv != cls.BL_OK:
+                            raise cls.BabyLINException(rv, "")
+                        return jumbo_frame
+
 
         @classmethod
         def BLC_getNextFrameTimeout(cls, handle, timeOutInMilliSeconds):
@@ -1797,6 +1846,21 @@ def create_BabyLIN():
 
 
         @classmethod
+        def BLC_getNextJumboFrameTimeout(cls, handle, timeOutInMilliSeconds):
+            """ """
+            with BabyLIN.ForeignFunctionParameterTypes(
+                cls, c_int, [c_void_p, POINTER(cls.BLC_JUMBO_FRAME), c_int]) \
+                    as lib_func:
+                        jumbo_frame = cls.BLC_JUMBO_FRAME()
+                        rv = lib_func(c_void_p(handle),
+                                      byref(jumbo_frame),
+                                      c_int(timeOutInMilliSeconds))
+                        if rv != cls.BL_OK:
+                            raise cls.BabyLINException(rv, "")
+                        return jumbo_frame
+
+
+        @classmethod
         def BLC_getNextFrames(cls, handle, numberOfFrames):
             """ """
             if numberOfFrames <= 0:
@@ -1809,9 +1873,33 @@ def create_BabyLIN():
                         size = c_int(numberOfFrames)
                         rv = lib_func(c_void_p(handle), byref(frames[0]),
                                       byref(size))
-                        if rv != cls.BL_OK:
+                        if ((rv == cls.BL_NO_DATA) or
+                            (rv == cls.BL_WRONG_PARAMETER) or
+                            (rv == cls.BL_HANDLE_INVALID)):
                             raise cls.BabyLINException(rv, "")
-                        return frames[:size]
+                        return frames[:size.value]
+
+
+        @classmethod
+        def BLC_getNextJumboFrames(cls, handle, numberOfFrames):
+            """ """
+            if numberOfFrames <= 0:
+                raise cls.BabyLINException(-1, "numberOfFrames <= 0")
+
+            with BabyLIN.ForeignFunctionParameterTypes(
+                cls, c_int, [c_void_p,
+                             POINTER(cls.BLC_JUMBO_FRAME), c_void_p]) \
+                    as lib_func:
+                        jumbo_frames = (cls.BLC_JUMBO_FRAME * numberOfFrames)()
+                        size = c_int(numberOfFrames)
+                        rv = lib_func(c_void_p(handle),
+                                      byref(jumbo_frames[0]),
+                                      byref(size))
+                        if ((rv == cls.BL_NO_DATA) or
+                            (rv == cls.BL_WRONG_PARAMETER) or
+                            (rv == cls.BL_HANDLE_INVALID)):
+                            raise cls.BabyLINException(rv, "")
+                        return jumbo_frames[:size.value]
 
 
         @classmethod
@@ -1833,9 +1921,37 @@ def create_BabyLIN():
                                       byref(frames[0]),
                                       c_int(timeOutInMilliSeconds),
                                       byref(size))
-                        if rv != cls.BL_OK:
+                        if ((rv == cls.BL_NO_DATA) or
+                            (rv == cls.BL_WRONG_PARAMETER) or
+                            (rv == cls.BL_HANDLE_INVALID)):
                             raise cls.BabyLINException(rv, "")
-                        return frames[:size]
+                        return frames[:size.value]
+
+
+        @classmethod
+        def BLC_getNextJumboFramesTimeout(cls, handle, numberOfFrames,
+                                          timeOutInMilliSeconds):
+            """ """
+            if numberOfFrames <= 0:
+                raise cls.BabyLINException(-1, "numberOfFrames <= 0")
+
+            with BabyLIN.ForeignFunctionParameterTypes(
+                cls, c_int, [c_void_p,
+                             POINTER(cls.BLC_JUMBO_FRAME),
+                             c_int,
+                             c_void_p]) \
+                    as lib_func:
+                        jumbo_frames = (cls.BLC_JUMBO_FRAME * numberOfFrames)()
+                        size = c_int(numberOfFrames)
+                        rv = lib_func(c_void_p(handle),
+                                      byref(jumbo_frames[0]),
+                                      c_int(timeOutInMilliSeconds),
+                                      byref(size))
+                        if ((rv == cls.BL_NO_DATA) or
+                            (rv == cls.BL_WRONG_PARAMETER) or
+                            (rv == cls.BL_HANDLE_INVALID)):
+                            raise cls.BabyLINException(rv, "")
+                        return jumbo_frames[:size.value]
 
         #
         # Signals
@@ -2181,7 +2297,7 @@ def create_BabyLIN():
                               byref(value))
                 if rv != BL_OK:
                     raise cls.BabyLINException(rv, "")
-                return value.value
+                return rv, value.value
 
 
         #
@@ -2229,6 +2345,42 @@ def create_BabyLIN():
                     if rv < 0:
                         raise cls.BabyLINException(rv, "")
                     return dst.value
+                    
+        @classmethod
+        def BLC_varRead(cls, channelHandle, signalNr, numberOfSignalsToRead):
+            """ numberOfSignalsToRead: signals are always 8 byte signals."""
+            with BabyLIN.ForeignFunctionParameterTypes(
+                cls, c_int, [c_void_p, c_int, c_char_p, c_int]) as lib_func:
+                    if numberOfSignalsToRead > 4096:
+                        raise cls.BabyLINException(-1, "numberOfSignalsToRead > 4096")                        
+                    dstLen = c_int(numberOfSignalsToRead)
+                    dst = create_string_buffer(dstLen.value)                    
+                    rv = lib_func(c_void_p(channelHandle),
+                                  c_int(signalNr),
+                                  dst,
+                                  dstLen)
+                    if rv < 0:
+                        raise cls.BabyLINException(rv, "")
+                    return dst.value
+                    
+        @classmethod        
+        def BLC_varWrite(cls, channelHandle, signalNr, dstBuf, numberOfSignalsToWrite):
+            """ numberOfSignalsToWrite: signals are always 8 byte signals.
+                dstBuf = b'\x32\x33\x35\x37'
+            """
+            with BabyLIN.ForeignFunctionParameterTypes(
+                cls, c_int, [c_void_p, c_int, c_char_p, c_int]) as lib_func:
+                if numberOfSignalsToWrite > len(dstBuf):
+                    raise cls.BabyLINException(-1, "too many numberOfSignalsToWrite for given input buffer")
+                if numberOfSignalsToWrite > 4096:
+                    raise cls.BabyLINException(-1, "numberOfSignalsToWrite > 4096")
+                rv = lib_func(c_void_p(channelHandle),
+                              c_int(signalNr),
+                              c_char_p(dstBuf),
+                              c_int(numberOfSignalsToWrite))
+                if rv != cls.BL_OK:
+                  raise cls.BabyLINException(rv, "")
+                return rv
 
         #
         # Macros
@@ -2262,6 +2414,25 @@ def create_BabyLIN():
                             macro_result = returnValue.value
 
                         return rv, macro_result
+
+        @classmethod
+        def BLC_getMacroResultString(cls, handle, macro_nr):
+            """Note: To receive the macro-result-string it may be necessary
+            to make sure the macro has been started. A call to 'macro_exec'
+            does not mean the macro has been executed, only the command has
+            been sent to the device.
+            """
+            with BabyLIN.ForeignFunctionParameterTypes(
+                cls, c_int, [c_void_p, c_int, c_char_p, c_int]) as lib_func:
+                    dstLen = c_int(512)
+                    dst = create_string_buffer(dstLen.value)
+                    rv = lib_func(c_void_p(handle),
+                                  c_int(macro_nr),
+                                  dst,
+                                  dstLen)
+                    if rv < 0:
+                        raise cls.BabyLINException(rv, "")
+                    return dst.value.decode("utf-8")
 
         #
         # SDF
@@ -2582,6 +2753,20 @@ def create_BabyLIN():
 
 
         @classmethod
+        def BLC_getDetailedErrorString(cls, error_code, report_parameter):
+            """ """
+            with BabyLIN.ForeignFunctionParameterTypes(
+                cls, c_int, [c_int, c_int, c_char_p, c_int]) as lib_func:
+                    bufLen = c_int(1024)
+                    buf = create_string_buffer(bufLen.value)
+                    rv = lib_func(c_int(error_code), c_int(report_parameter),
+                                  buf, bufLen)
+                    if rv == cls.BL_BUFFER_TOO_SMALL:
+                        raise cls.BabyLINException(rv, "Buffer too small")
+                    return buf.value.decode('utf-8')
+
+
+        @classmethod
         def BLC_getNextBusError(cls, channelHandle):
             """ """
             with BabyLIN.ForeignFunctionParameterTypes(
@@ -2624,18 +2809,18 @@ def create_BabyLIN():
         def BLC_getRawSlaveResponse(cls, linChannelHandle, length):
             """ """
             with BabyLIN.ForeignFunctionParameterTypes(
-                cls, c_int, [c_void_p, c_void_p, c_int]) as lib_func:
-
+                cls, c_int, [c_void_p, c_char_p, c_int]) as lib_func:
                     if length <= 0:
                         raise cls.BabyLINException(-1,
                                         "positive length argument needed")
-
-                    data = c_void_p(six.binary_type(length))
-                    rv = lib_func(c_void_p(linChannelHandle),
-                                           data, c_int(length))
+                    bSize = c_int(length)
+                    data = create_string_buffer(bSize.value)
+                    rv = lib_func(c_void_p(linChannelHandle), data, bSize)
                     if rv != cls.BL_OK:
+                        if rv == cls.BL_NO_DATA:
+                            return rv, bytes(length)
                         raise cls.BabyLINException(rv, "")
-                    return rv
+                    return rv, bytes(data)
 
 
         @classmethod
@@ -3055,7 +3240,7 @@ def create_BabyLIN():
 
 
         @classmethod
-        def BLC_getBinary(cls, handle, path):
+        def BLC_getBinary(cls, handle, path, *, remove_trailing_nul=False):
             """ """
             with BabyLIN.ForeignFunctionParameterTypes(
                 cls, c_int, [c_void_p, c_char_p, c_void_p, c_void_p]) \
@@ -3080,6 +3265,12 @@ def create_BabyLIN():
                         if rv != cls.BL_OK:
                             raise cls.BabyLINException(rv, "")
                         else:
+                            if remove_trailing_nul:
+                                if bSize.value > 1:
+                                    cnt = bSize.value-1
+                                    while cnt > 0 and buf[cnt] == 0x00:
+                                        cnt = cnt - 1
+                                    return buf[:cnt]
                             if bSize.value > 0:
                                 return buf[:bSize.value]
                         return bytes()
