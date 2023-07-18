@@ -64,7 +64,7 @@ class BL:
     def setsig(self, sigNum, Value):
         commandString = 'setsig ' + str(sigNum) + ' ' + str(Value) + ';'
         BLC_sendCommand(self.chHandle, commandString)
-        print(commandString)
+        # print(commandString)
 
     def stopSchedule(self):
         '''

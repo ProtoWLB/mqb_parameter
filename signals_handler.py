@@ -1,4 +1,5 @@
 from config import frame_config
+import time
 
 class signalsHandler():
     def __init__(self, BabyLin, frame):
@@ -23,4 +24,5 @@ class signalsHandler():
         """
         for sig, value in zip(signals, ramp):
             self.BabyLin.setsig(sig, value)
+            time.sleep(0.01)
 
