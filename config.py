@@ -22,3 +22,4 @@ class lin:
     parameter_macro = 0  # macro sending ramps definition with diagnostics
     extended_session_macro = 1
     max_macro_repeats = 5
+    nad_signal = 273
