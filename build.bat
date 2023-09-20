@@ -1,1 +1,1 @@
-pyinstaller .\mqb_script.py --onefile
+pyinstaller .\mqb_script.py --onefile -n parameter_script
