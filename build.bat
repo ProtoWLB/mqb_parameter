@@ -1,1 +1,1 @@
-pyinstaller --onefile --noconsole mqb_script.py
+pyinstaller .\mqb_script.py --onefile

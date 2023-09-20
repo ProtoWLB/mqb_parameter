@@ -5,6 +5,7 @@ from signals_handler import signalsHandler
 from config import frame_config, lin
 import time
 from barka import barka_lyrics
+import json
 
 import os
 
@@ -18,15 +19,20 @@ BabyLin.startSchedule(lin.schedule_num)  # diagnostic session
 BabyLin.macro_exec(lin.extended_session_macro)  # exetended session frame - periodic send
 nad = 64
 
-versions = {
-    64: 'MQB',
-    65: 'RSA',
-    87: 'NIO',
-    119: 'MissX-MVB',
-    118: 'MissX-IVB',
-    2137: 'Barka'
-
-}
+with open('nads.json') as f:
+    data = json.load(f)
+versions = {int(k):v for k,v in data.items()}
+versions[2137] =  'Barka'
+print(versions)
+# versions = {
+#     64: 'MQB',
+#     65: 'RSA',
+#     87: 'NIO',
+#     119: 'MissX-MVB',
+#     118: 'MissX-IVB',
+#     2137: 'Barka'
+#
+# }
 print_versions = [f'{v}:{k}' for k,v in versions.items() if k != 2137]
 
 
@@ -37,9 +43,12 @@ def get_version_name(nad):
             nad = 64
             print(barka_lyrics)
             return versions[nad]
+        print('-------------------')
+        print(result)
         return result
     except KeyError:
-        return('unknown NAD')
+        return(f'unknown NAD {nad}')
+
 
 # dissignal read signals
 for signal in frame_config.read_signals:
